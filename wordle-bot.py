@@ -1,4 +1,6 @@
 import numpy as np
+import os
+
 
 words = np.loadtxt("word-list.txt", dtype=str)
 
@@ -32,19 +34,22 @@ def get_average_score(candidate):
     
     return score_sum / len(words)
 
-def get_best_starting_word():
-    best_word = words[0]
-    best_score = 0
-
+def score_starting_words():
+    scored_words = []
     for word in words:
-        print("Calculating score for", word)
-        new_score = get_average_score(word)
-        print("Got score of", new_score)
-        if new_score >= best_score:
-            best_word = word
-            best_score = new_score
+        score = get_average_score(word)
+        print(word, "has an average score of", score)
+        scored_words.append((word, score))
+    
+    scored_words.sort(key=lambda x:x[1], reverse=True)
+    return scored_words
 
-    print("Final result:")
-    print(best_word, "won with a score of", best_score)
 
-get_best_starting_word()
+def show_best_starting_words():
+    best_words = score_starting_words()
+    os.system("clear")
+
+    for i in range(20):
+        print("#" + str(i+1) + ":", best_words[i])
+
+show_best_starting_words()
